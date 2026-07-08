@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "calibraq"
+version = "0.1.0"
+description = "Drift-aware quantum backend calibration intelligence: drift-aware qubit selection, validated against mapomatic on real IBM calibration data."
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.7,<3",
+    "sqlalchemy>=2.0,<3",
+    # Pinned: the backend-properties API has changed across versions.
+    # Verified against 0.47.0 (channel="ibm_quantum_platform",
+    # IBMBackend.properties() -> qiskit_ibm_runtime.models.BackendProperties).
+    "qiskit-ibm-runtime~=0.47.0",
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "python-dotenv>=1.0",
+    # Phase 3: trusted baseline for layout matching + cost. Verified against
+    # 0.14.0 (matching_layouts / evaluate_layouts with a pluggable cost_function).
+    "mapomatic~=0.14.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    # mapomatic 0.14 iterates CircuitInstruction the legacy way internally;
+    # our own code uses the modern accessors. Silence only mapomatic's.
+    "ignore:Treating CircuitInstruction as an iterable:DeprecationWarning:mapomatic.layouts",
+]
