@@ -1,5 +1,7 @@
 # CalibraQ
 
+![CI](https://github.com/Maxter1476/calibraq/actions/workflows/ci.yml/badge.svg)
+
 **Drift-aware qubit selection, validated against mapomatic on real IBM
 calibration data.**
 
